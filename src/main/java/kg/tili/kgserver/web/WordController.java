@@ -31,7 +31,7 @@ public class WordController {
         }
 
         for (Word word : wordRepo.findAll()) {
-            dicDto.words.add(new WordDto(word.id.toString(), word.type, word.ru, word.kg));
+            dicDto.words.add(new WordDto(word.id.toString(), word.type.id, word.ru, word.kg));
         }
         return dicDto;
     }
@@ -39,10 +39,12 @@ public class WordController {
     @RequestMapping(value = "/add_word", method = RequestMethod.POST)
     public ResponseEntity<Boolean> addWord(@RequestBody WordDto dto) {
         System.out.println("New word: " + dto);
+        Type type = typeRepo.getReferenceById(dto.type);
+        System.out.println("Type: " + type);
         Word word = new Word();
         word.ru = dto.ru;
         word.kg = dto.kg;
-        word.type = dto.type;
+        word.type = type;
         wordRepo.save(word);
         return ResponseEntity.ok(true);
     }
