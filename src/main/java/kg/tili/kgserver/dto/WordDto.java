@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 public class WordDto implements Serializable {
-    public String id;
+    public Long id;
     public Long type;
     public String ru;
     public String kg;
