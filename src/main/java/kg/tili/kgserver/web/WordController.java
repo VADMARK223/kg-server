@@ -21,7 +21,7 @@ public class WordController {
     private final TypeRepo typeRepo;
 
     @RequestMapping(value = "/dic_get", method = RequestMethod.GET)
-    public DicDto getAllDic() {
+    public ResponseEntity<DicDto> getAllDic() {
         DicDto dicDto = new DicDto();
 
         for (Type type : typeRepo.findAll()) {
@@ -31,7 +31,7 @@ public class WordController {
         for (Word word : wordRepo.findAll()) {
             dicDto.words.add(new WordDto(word.id, word.type.id, word.ru, word.kg));
         }
-        return dicDto;
+        return ResponseEntity.ok(dicDto);
     }
 
     @RequestMapping(value = "/save_word", method = RequestMethod.POST)
