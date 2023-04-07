@@ -22,7 +22,9 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeHttpRequests((authz) -> authz
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/get_user_info").fullyAuthenticated() // Показывает окно логина
+                                .requestMatchers("/get_user_info", "/register_user").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());
         return http.build();
