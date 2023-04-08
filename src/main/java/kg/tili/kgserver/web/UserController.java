@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
  * @author Markitanov Vadim
  * @since 07.04.2023
  */
-@CrossOrigin
 @RestController
 @AllArgsConstructor
 public class UserController {

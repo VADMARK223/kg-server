@@ -17,15 +17,15 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println("FILTER CHAIN");
+        http.cors();
         http
                 .csrf().disable()
-                .cors().disable()
                 .authorizeHttpRequests((authz) -> authz
-//                        .requestMatchers("/get_user_info").fullyAuthenticated() // Показывает окно логина
+                                .requestMatchers("/dic_get").fullyAuthenticated()
                                 .requestMatchers("/get_user_info", "/register_user").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .formLogin().loginPage("/login").and()
                 .httpBasic(withDefaults());
         return http.build();
     }

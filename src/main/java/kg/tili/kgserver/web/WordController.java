@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
  * @author Markitanov Vadim
  * @since 05.04.2023
  */
-@CrossOrigin
 @RestController
 @AllArgsConstructor
 public class WordController {
