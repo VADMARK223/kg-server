@@ -3,6 +3,8 @@ package kg.tili.kgserver.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Set;
+
 /**
  * @author Markitanov Vadim
  * @since 05.04.2023
@@ -23,4 +25,7 @@ public class Word {
 
     @ManyToOne(fetch = FetchType.LAZY)
     public Type type;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Tag> tags;
 }

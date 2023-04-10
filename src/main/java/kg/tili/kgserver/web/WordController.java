@@ -1,13 +1,18 @@
 package kg.tili.kgserver.web;
 
 import kg.tili.kgserver.dto.*;
+import kg.tili.kgserver.entity.Tag;
 import kg.tili.kgserver.entity.Type;
 import kg.tili.kgserver.entity.Word;
+import kg.tili.kgserver.repository.TagRepo;
 import kg.tili.kgserver.repository.TypeRepo;
 import kg.tili.kgserver.repository.WordRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Markitanov Vadim
@@ -18,8 +23,9 @@ import org.springframework.web.bind.annotation.*;
 public class WordController {
     private final WordRepo wordRepo;
     private final TypeRepo typeRepo;
+    private final TagRepo tagRepo;
 
-    @RequestMapping(value = "/dic_get", method = RequestMethod.GET)
+    @RequestMapping(value = "/get_dic", method = RequestMethod.GET)
     public ResponseEntity<DicDto> getAllDic() {
         DicDto dicDto = new DicDto();
 
@@ -28,8 +34,14 @@ public class WordController {
         }
 
         for (Word word : wordRepo.findAll()) {
-            dicDto.words.add(new WordDto(word.id, word.type.id, word.ru, word.kg));
+            System.out.println("word: " + word.ru + ", tags: " + word.getTags());
+            dicDto.words.add(new WordDto(word.id, word.type.id, word.ru, word.kg, word.getTags()));
         }
+
+        for (Tag tag : tagRepo.findAll()) {
+            dicDto.tags.add(new TagDto(tag.getId(), tag.getLabel()));
+        }
+
         return ResponseEntity.ok(dicDto);
     }
 

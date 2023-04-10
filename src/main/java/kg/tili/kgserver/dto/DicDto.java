@@ -8,7 +8,7 @@ import java.util.List;
  * @since 05.04.2023
  */
 public class DicDto {
-    public List<TagDto> tags;
+    public List<TagDto> tags = new ArrayList<>();
     public List<TypeDto> types = new ArrayList<>();
     public List<WordDto> words = new ArrayList<>();
 }

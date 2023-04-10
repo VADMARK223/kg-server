@@ -21,9 +21,8 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
-                                .requestMatchers("/dic_get").fullyAuthenticated()
-                                .requestMatchers("/get_user_info", "/register_user").permitAll()
-                                .anyRequest().authenticated()
+                        .requestMatchers("/save_word", "/get_dic", "/get_user_info", "/register_user").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin().loginPage("/login").and()
                 .httpBasic(withDefaults());
