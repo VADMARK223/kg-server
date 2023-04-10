@@ -39,7 +39,7 @@ public class WordController {
         }
 
         for (Tag tag : tagRepo.findAll()) {
-            dicDto.tags.add(new TagDto(tag.getId(), tag.getId(), tag.getLabel()));
+            dicDto.tags.add(new TagDto(tag.getValue(), tag.getLabel()));
         }
 
         return ResponseEntity.ok(dicDto);
@@ -57,7 +57,7 @@ public class WordController {
         word.kg = dto.kg;
         word.type = type;
         dto.tags.forEach(tag -> {
-            Tag newTag = tagRepo.getReferenceById(tag.getId());
+            Tag newTag = tagRepo.getReferenceById(tag.getValue());
             word.getTags().add(newTag);
         });
 
