@@ -22,6 +22,9 @@ public class Tag {
     @Column(name = "label")
     private String label;
 
+    @Column(name = "color")
+    private String color;
+
     @Transient
     @ManyToMany(mappedBy = "tags")
     private Set<Word> words;
