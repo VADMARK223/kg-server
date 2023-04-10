@@ -21,7 +21,7 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/save_word", "/get_dic", "/get_user_info", "/register_user").permitAll()
+                        .requestMatchers("/save_word", "/delete_word", "/get_dic", "/get_user_info", "/register_user").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin().loginPage("/login").and()

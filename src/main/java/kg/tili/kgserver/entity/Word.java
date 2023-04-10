@@ -3,6 +3,7 @@ package kg.tili.kgserver.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -27,5 +28,5 @@ public class Word {
     public Type type;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 }

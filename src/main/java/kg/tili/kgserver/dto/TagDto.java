@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public class TagDto {
+    public Long id;
     public Long value;
     public String label;
 }
