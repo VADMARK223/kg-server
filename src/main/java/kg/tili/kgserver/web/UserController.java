@@ -3,13 +3,12 @@ package kg.tili.kgserver.web;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import kg.tili.kgserver.dto.ResponseDto;
-import kg.tili.kgserver.dto.TempDto;
 import kg.tili.kgserver.dto.UserDto;
 import kg.tili.kgserver.entity.User;
+import kg.tili.kgserver.repository.UserRepo;
 import kg.tili.kgserver.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -36,6 +35,9 @@ public class UserController {
     @Autowired
     public AuthenticationConfiguration authenticationConfiguration;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @RequestMapping(value = "/get_user_info", method = RequestMethod.GET)
     public ResponseEntity<Boolean> getUserInfo() {
         System.out.println("GEt USER INFO");
@@ -49,7 +51,7 @@ public class UserController {
         User user = new User();
         user.setUsername(userDto.username);
         user.setPassword(userDto.password);
-        user.setPassword(passwordEncoder.encode(userDto.password));
+//        user.setPassword(passwordEncoder.encode(userDto.password));
         boolean resultSaveUser = userService.saveUser(user);
         System.out.println("resultSaveUser: " + resultSaveUser);
         return ResponseEntity.ok(true);
@@ -58,11 +60,20 @@ public class UserController {
     @RequestMapping(value = "/login_user", method = RequestMethod.POST)
     public ResponseEntity<ResponseDto<String>> loginUser(@RequestBody UserDto userDto) {
         System.out.println("LOGIN USER: " + userDto);
-//        String tempPass = passwordEncoder.encode(userDto.password);
-        String tempPass = userDto.password;
-        System.out.println("tempPass: " + tempPass);
+        User userDB = userRepo.findByUsername(userDto.username);
+        if(userDB==null){
+            return ResponseEntity.ok(ResponseDto.<String>failure("Пользователь не найден.").build());
+        }
+        System.out.println("UserDB password: " + userDB.getPassword());
+//        boolean result = passwordEncoder.matches(userDto.password, userDB.getPassword());
+//        if (!result) {
+//            return ResponseEntity.ok(ResponseDto.<String>failure("Неверный пароль.").build());
+//        }
         try {
-            SecurityContextHolder.getContext().setAuthentication(authenticationConfiguration.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(userDto.username, tempPass)));
+            SecurityContextHolder.getContext().setAuthentication(authenticationConfiguration.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword())));
+//            authenticationConfiguration.getAuthenticationManager().authenticate(new );
+//            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userDB.getUsername(), userDB.getPassword());
+//            SecurityContextHolder.getContext().setAuthentication(authRequest);
         } catch (Exception e) {
             return ResponseEntity.ok(ResponseDto.<String>failure(e.getMessage()).build());
         }
