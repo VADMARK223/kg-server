@@ -49,16 +49,24 @@ public class UserController {
         User user = new User();
         user.setUsername(userDto.username);
         user.setPassword(userDto.password);
-//        user.setPassword(passwordEncoder.encode(userDto.password));
+        user.setPassword(passwordEncoder.encode(userDto.password));
         boolean resultSaveUser = userService.saveUser(user);
         System.out.println("resultSaveUser: " + resultSaveUser);
         return ResponseEntity.ok(true);
     }
 
     @RequestMapping(value = "/login_user", method = RequestMethod.POST)
-    public ResponseEntity<ResponseDto<String>> loginUser(@RequestBody UserDto userDto) throws Exception {
+    public ResponseEntity<ResponseDto<String>> loginUser(@RequestBody UserDto userDto) {
         System.out.println("LOGIN USER: " + userDto);
-        SecurityContextHolder.getContext().setAuthentication(authenticationConfiguration.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(userDto.username, userDto.password)));
+//        String tempPass = passwordEncoder.encode(userDto.password);
+        String tempPass = userDto.password;
+        System.out.println("tempPass: " + tempPass);
+        try {
+            SecurityContextHolder.getContext().setAuthentication(authenticationConfiguration.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(userDto.username, tempPass)));
+        } catch (Exception e) {
+            return ResponseEntity.ok(ResponseDto.<String>failure(e.getMessage()).build());
+        }
+
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println("user: " + user);
         Algorithm algorithm = Algorithm.HMAC256("SECRET");

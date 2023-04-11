@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -55,7 +54,10 @@ public class SecurityConfiguration {
 
             @Override
             public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                return true;
+                System.out.println("MATCH: " + rawPassword + " encodedPassword: " + encodedPassword);
+                boolean result = rawPassword.toString().equals(encodedPassword);
+                System.out.println("result: " + result);
+                return result;
             }
         };
 //        return new BCryptPasswordEncoder();
