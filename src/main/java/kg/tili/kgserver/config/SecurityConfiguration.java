@@ -32,6 +32,8 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
 //                        .requestMatchers("/get_user_info").hasRole("_ADMIN")
+                        .requestMatchers("/login_user").permitAll()
+//                        .requestMatchers("/test_service").permitAll()
                         .requestMatchers("/save_word", "/delete_word", "/get_dic", "/register_user").permitAll()
                         .anyRequest().authenticated()
                 )
