@@ -34,12 +34,11 @@ public class WordController {
         }
 
         for (Word word : wordRepo.findAll()) {
-            System.out.println("word: " + word.ru + ", tags: " + word.getTags());
             dicDto.words.add(new WordDto(word.id, word.type.id, word.ru, word.kg, word.getTags()));
         }
 
         for (Tag tag : tagRepo.findAll()) {
-            dicDto.tags.add(new TagDto(tag.getValue(), tag.getLabel()));
+            dicDto.tags.add(new TagDto(tag.getValue(), tag.getLabel(), tag.getDateCreated()));
         }
 
         return ResponseEntity.ok(dicDto);
