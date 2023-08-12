@@ -30,7 +30,7 @@ public class WordController {
         DicDto dicDto = new DicDto();
 
         typeRepo.findAll().forEach(type -> dicDto.getTypes().add(TypeDto.builder().value(type.getId()).label(type.getLabel()).build()));
-        wordRepo.findAll().forEach(word -> dicDto.getWords().add(WordDto.builder().id(word.id).type(word.type.getId()).ru(word.ru).kg(word.kg).tags(word.getTags()).build()));
+        wordRepo.findAll().forEach(word -> dicDto.getWords().add(WordDto.builder().id(word.id()).type(word.type().getId()).ru(word.ru()).kg(word.kg()).tags(word.tags()).build()));
         tagRepo.findAll().forEach(tag -> dicDto.getTags().add(TagDto.builder().value(tag.getValue()).label(tag.getLabel()).color(tag.getColor()).build()));
 
         return ResponseEntity.ok(dicDto);
@@ -41,14 +41,14 @@ public class WordController {
         Type type = typeRepo.getReferenceById(dto.getType());
         Word word = new Word();
         if (dto.getId() != null) {
-            word.id = dto.getId();
+            word.id(dto.getId());
         }
-        word.ru = dto.getRu();
-        word.kg = dto.getRu();
-        word.type = type;
+        word.ru(dto.getRu());
+        word.kg(dto.getRu());
+        word.type(type);
         dto.getTags().forEach(tag -> {
             Tag newTag = tagRepo.getReferenceById(tag.getValue());
-            word.getTags().add(newTag);
+            word.tags().add(newTag);
         });
 
         wordRepo.save(word);

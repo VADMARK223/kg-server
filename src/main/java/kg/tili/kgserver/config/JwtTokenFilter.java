@@ -58,8 +58,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         User user = userRepo.findByUsername(issuer);
-        System.out.println("Find username: " + user.getUsername());
-        System.out.println("Find password: " + user.getPassword());
 
         SecurityContextHolder.getContext().setAuthentication(authenticationConfiguration.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())));
         filterChain.doFilter(request, response);

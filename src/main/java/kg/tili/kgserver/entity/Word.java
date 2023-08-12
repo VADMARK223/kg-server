@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,20 +16,21 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
+@Accessors(fluent = true)
 @Table(name = "words")
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     @Column(name = "ru")
-    public String ru;
+    private String ru;
 
     @Column(name = "kg")
-    public String kg;
+    private String kg;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public Type type;
+    private Type type;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags = new HashSet<>();
