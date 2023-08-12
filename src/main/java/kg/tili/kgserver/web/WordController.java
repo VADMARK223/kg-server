@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.stream.Collectors;
+
 /**
  * @author Markitanov Vadim
  * @since 05.04.2023
@@ -29,9 +31,43 @@ public class WordController {
     public ResponseEntity<DicDto> getAllDic() {
         DicDto dicDto = new DicDto();
 
-        typeRepo.findAll().forEach(type -> dicDto.getTypes().add(TypeDto.builder().value(type.getId()).label(type.getLabel()).build()));
-        wordRepo.findAll().forEach(word -> dicDto.getWords().add(WordDto.builder().id(word.id()).type(word.type().getId()).ru(word.ru()).kg(word.kg()).tags(word.tags()).build()));
-        tagRepo.findAll().forEach(tag -> dicDto.getTags().add(TagDto.builder().value(tag.getValue()).label(tag.getLabel()).color(tag.getColor()).build()));
+        dicDto.getTypes().addAll(
+                typeRepo.findAll()
+                        .stream()
+                        .map(type -> TypeDto
+                                .builder()
+                                .value(type.getId())
+                                .label(type.getLabel())
+                                .build()
+                        )
+                        .collect(Collectors.toList())
+        );
+        dicDto.getWords().addAll(
+                wordRepo.findAll()
+                        .stream()
+                        .map(word -> WordDto
+                                .builder()
+                                .id(word.id())
+                                .type(word.type().getId())
+                                .ru(word.ru())
+                                .kg(word.kg())
+                                .tags(word.tags())
+                                .build()
+                        )
+                        .collect(Collectors.toList())
+        );
+        dicDto.getTags().addAll(
+                tagRepo.findAll()
+                        .stream()
+                        .map(tag -> TagDto
+                                .builder()
+                                .value(tag.getValue())
+                                .label(tag.getLabel())
+                                .color(tag.getColor())
+                                .build()
+                        )
+                        .collect(Collectors.toList())
+        );
 
         return ResponseEntity.ok(dicDto);
     }
@@ -44,7 +80,7 @@ public class WordController {
             word.id(dto.getId());
         }
         word.ru(dto.getRu());
-        word.kg(dto.getRu());
+        word.kg(dto.getKg());
         word.type(type);
         dto.getTags().forEach(tag -> {
             Tag newTag = tagRepo.getReferenceById(tag.getValue());
