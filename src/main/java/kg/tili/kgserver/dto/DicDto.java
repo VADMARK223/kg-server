@@ -1,8 +1,5 @@
 package kg.tili.kgserver.dto;
 
-import kg.tili.kgserver.entity.Tag;
-import kg.tili.kgserver.entity.Type;
-import kg.tili.kgserver.entity.Word;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class DicDto {
-    private List<Tag> tags = new ArrayList<>();
-    private List<Type> types = new ArrayList<>();
-    private List<Word> words = new ArrayList<>();
+    private List<TagDto> tags = new ArrayList<>();
+    private List<TypeDto> types = new ArrayList<>();
+    private List<WordDto> words = new ArrayList<>();
 }

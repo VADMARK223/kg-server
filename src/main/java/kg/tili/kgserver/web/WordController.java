@@ -29,17 +29,17 @@ public class WordController {
     public ResponseEntity<DicDto> getAllDic() {
         DicDto dicDto = new DicDto();
 
-//        for (Type type : typeRepo.findAll()) {
-//            dicDto.types.add(new TypeDto(type.id, type.label));
-//        }
-//
-//        for (Word word : wordRepo.findAll()) {
-//            dicDto.words.add(new WordDto(word.id, word.type.id, word.ru, word.kg, word.getTags()));
-//        }
+        for (Type type : typeRepo.findAll()) {
+            dicDto.getTypes().add(new TypeDto(type.id, type.label));
+        }
 
-        dicDto.setTypes(typeRepo.findAll());
-        dicDto.setWords(wordRepo.findAll());
-        dicDto.setTags(tagRepo.findAll());
+        for (Word word : wordRepo.findAll()) {
+            dicDto.getWords().add(new WordDto(word.id, word.type.id, word.ru, word.kg, word.getTags()));
+        }
+
+        for (Tag tag : tagRepo.findAll()) {
+            dicDto.getTags().add(new TagDto(tag.getValue(), tag.getLabel(), tag.getDateCreated()));
+        }
 
         return ResponseEntity.ok(dicDto);
     }
