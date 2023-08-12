@@ -2,6 +2,8 @@ package kg.tili.kgserver.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +12,8 @@ import java.util.Set;
  * @author Markitanov Vadim
  * @since 05.04.2023
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "words")
 public class Word {

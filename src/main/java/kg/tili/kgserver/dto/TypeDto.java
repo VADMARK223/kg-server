@@ -1,13 +1,15 @@
 package kg.tili.kgserver.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 /**
  * @author Markitanov Vadim
  * @since 05.04.2023
  */
+@Data
+@Builder
 @AllArgsConstructor
 public class TypeDto {
-    public Long value;
-    public String label;
+    private Long value;
+    private String label;
 }

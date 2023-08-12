@@ -29,33 +29,24 @@ public class WordController {
     public ResponseEntity<DicDto> getAllDic() {
         DicDto dicDto = new DicDto();
 
-        for (Type type : typeRepo.findAll()) {
-            dicDto.getTypes().add(new TypeDto(type.id, type.label));
-        }
-
-        for (Word word : wordRepo.findAll()) {
-            dicDto.getWords().add(new WordDto(word.id, word.type.id, word.ru, word.kg, word.getTags()));
-        }
-
-        for (Tag tag : tagRepo.findAll()) {
-            dicDto.getTags().add(new TagDto(tag.getValue(), tag.getLabel(), tag.getColor()));
-        }
+        typeRepo.findAll().forEach(type -> dicDto.getTypes().add(TypeDto.builder().value(type.getId()).label(type.getLabel()).build()));
+        wordRepo.findAll().forEach(word -> dicDto.getWords().add(WordDto.builder().id(word.id).type(word.type.getId()).ru(word.ru).kg(word.kg).tags(word.getTags()).build()));
+        tagRepo.findAll().forEach(tag -> dicDto.getTags().add(TagDto.builder().value(tag.getValue()).label(tag.getLabel()).color(tag.getColor()).build()));
 
         return ResponseEntity.ok(dicDto);
     }
 
     @RequestMapping(value = "/save_word", method = RequestMethod.POST)
     public ResponseEntity<Boolean> saveWord(@RequestBody WordDto dto) {
-        System.out.println("New word: " + dto);
-        Type type = typeRepo.getReferenceById(dto.type);
+        Type type = typeRepo.getReferenceById(dto.getType());
         Word word = new Word();
-        if (dto.id != null) {
-            word.id = dto.id;
+        if (dto.getId() != null) {
+            word.id = dto.getId();
         }
-        word.ru = dto.ru;
-        word.kg = dto.kg;
+        word.ru = dto.getRu();
+        word.kg = dto.getRu();
         word.type = type;
-        dto.tags.forEach(tag -> {
+        dto.getTags().forEach(tag -> {
             Tag newTag = tagRepo.getReferenceById(tag.getValue());
             word.getTags().add(newTag);
         });
@@ -75,15 +66,5 @@ public class WordController {
 
         wordRepo.deleteById(wordId);
         return ResponseEntity.ok(ResponseDto.success().build());
-    }
-
-    @RequestMapping(value = "/success", method = RequestMethod.GET)
-    public ResponseEntity<ResponseDto<TempDto>> success() {
-        return ResponseEntity.ok(ResponseDto.<TempDto>success().data(new TempDto()).build());
-    }
-
-    @RequestMapping(value = "/failure", method = RequestMethod.GET)
-    public ResponseEntity<ResponseDto<TempDto>> failure() {
-        return ResponseEntity.ok(ResponseDto.<TempDto>failure("Reason error").data(new TempDto()).build());
     }
 }

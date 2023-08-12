@@ -1,7 +1,7 @@
 package kg.tili.kgserver.dto;
 
 import kg.tili.kgserver.entity.Tag;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,11 +12,11 @@ import java.util.Set;
  * @since 05.04.2023
  */
 @Data
-@AllArgsConstructor
+@Builder
 public class WordDto implements Serializable {
-    public Long id;
-    public Long type;
-    public String ru;
-    public String kg;
-    public Set<Tag> tags;
+    private Long id;
+    private Long type;
+    private String ru;
+    private String kg;
+    private Set<Tag> tags;
 }

@@ -41,7 +41,7 @@ public class TagController {
 //        if (dto.value != null) {
 //            tag.setValue(dto.value);
 //        }
-        tag.setLabel(dto.label);
+        tag.setLabel(dto.getLabel());
         tagRepo.save(tag);
         return getAllTags();
     }

@@ -4,19 +4,23 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Markitanov Vadim
  * @since 05.04.2023
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "types")
 public class Type {
     @Id
-    public Long id;
+    private Long id;
 
     @Column(name = "label")
-    public String label;
+    private String label;
 }
