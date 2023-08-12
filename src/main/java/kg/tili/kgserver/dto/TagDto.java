@@ -2,8 +2,6 @@ package kg.tili.kgserver.dto;
 
 import lombok.AllArgsConstructor;
 
-import java.sql.Timestamp;
-
 /**
  * @author Markitanov Vadim
  * @since 05.04.2023
@@ -12,5 +10,5 @@ import java.sql.Timestamp;
 public class TagDto {
     public Long value;
     public String label;
-    public Timestamp dateCreated;
+    public String color;
 }

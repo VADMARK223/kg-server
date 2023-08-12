@@ -38,7 +38,7 @@ public class WordController {
         }
 
         for (Tag tag : tagRepo.findAll()) {
-            dicDto.getTags().add(new TagDto(tag.getValue(), tag.getLabel(), tag.getDateCreated()));
+            dicDto.getTags().add(new TagDto(tag.getValue(), tag.getLabel(), tag.getColor()));
         }
 
         return ResponseEntity.ok(dicDto);

@@ -28,7 +28,7 @@ public class TagController {
         List<TagDto> result = new ArrayList<>();
 
         for (Tag tag : tagRepo.findAll()) {
-            result.add(new TagDto(tag.getValue(), tag.getLabel(), tag.getDateCreated()));
+            result.add(new TagDto(tag.getValue(), tag.getLabel(), tag.getColor()));
         }
 
         return ResponseEntity.ok(ResponseDto.<List<TagDto>>success().data(result).build());
