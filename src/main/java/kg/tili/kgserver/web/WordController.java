@@ -8,6 +8,8 @@ import kg.tili.kgserver.repository.TagRepo;
 import kg.tili.kgserver.repository.TypeRepo;
 import kg.tili.kgserver.repository.WordRepo;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +25,16 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 public class WordController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WordController.class);
     private final WordRepo wordRepo;
     private final TypeRepo typeRepo;
     private final TagRepo tagRepo;
 
     @RequestMapping(value = "/get_dic", method = RequestMethod.GET)
     public ResponseEntity<DicDto> getAllDic() {
+        LOGGER.error("ER");
+        LOGGER.warn("WARN");
+
         DicDto dicDto = new DicDto();
 
         dicDto.getTypes().addAll(

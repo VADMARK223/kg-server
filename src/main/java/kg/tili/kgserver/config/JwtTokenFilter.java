@@ -50,7 +50,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         final String token = header.split(" ")[1].trim();
         String issuer = jwtUtils.validate(token);
-        System.out.println("issuer: " + issuer);
         if (issuer == null) {
             System.out.println("NOT VALID TOKEN!");
             filterChain.doFilter(request, response);

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtils {
     public String validate(String token) {
-        System.out.println("Try verify token: " + token);
         try {
             Algorithm algorithm = Algorithm.HMAC256("SECRET");
             JWTVerifier verifier = JWT.require(algorithm)

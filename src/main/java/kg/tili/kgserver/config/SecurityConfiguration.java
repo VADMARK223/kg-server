@@ -54,10 +54,7 @@ public class SecurityConfiguration {
 
             @Override
             public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                System.out.println("MATCH: " + rawPassword + " encodedPassword: " + encodedPassword);
-                boolean result = rawPassword.toString().equals(encodedPassword);
-                System.out.println("result: " + result);
-                return result;
+                return rawPassword.toString().equals(encodedPassword);
             }
         };
 //        return new BCryptPasswordEncoder();
