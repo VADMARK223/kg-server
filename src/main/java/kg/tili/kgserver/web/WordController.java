@@ -32,9 +32,6 @@ public class WordController {
 
     @RequestMapping(value = "/get_dic", method = RequestMethod.GET)
     public ResponseEntity<DicDto> getAllDic() {
-        LOGGER.error("ER");
-        LOGGER.warn("WARN");
-
         DicDto dicDto = new DicDto();
 
         dicDto.getTypes().addAll(

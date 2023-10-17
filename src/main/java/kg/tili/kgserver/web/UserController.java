@@ -8,7 +8,6 @@ import kg.tili.kgserver.entity.User;
 import kg.tili.kgserver.repository.UserRepo;
 import kg.tili.kgserver.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -26,17 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 public class UserController {
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public AuthenticationConfiguration authenticationConfiguration;
-
-    @Autowired
-    private UserRepo userRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final UserRepo userRepo;
 
     @RequestMapping(value = "/get_user_info", method = RequestMethod.GET)
     public ResponseEntity<Boolean> getUserInfo() {
@@ -50,8 +42,9 @@ public class UserController {
         System.out.println("REGISTER USER: " + userDto);
         User user = new User();
         user.setUsername(userDto.username);
-        user.setPassword(userDto.password);
-//        user.setPassword(passwordEncoder.encode(userDto.password));
+        String password = passwordEncoder.encode(userDto.password);
+        System.out.println("password: " + password);
+        user.setPassword(password);
         boolean resultSaveUser = userService.saveUser(user);
         System.out.println("resultSaveUser: " + resultSaveUser);
         return ResponseEntity.ok(true);
@@ -61,7 +54,7 @@ public class UserController {
     public ResponseEntity<ResponseDto<String>> loginUser(@RequestBody UserDto userDto) {
         System.out.println("LOGIN USER: " + userDto);
         User userDB = userRepo.findByUsername(userDto.username);
-        if(userDB==null){
+        if (userDB == null) {
             return ResponseEntity.ok(ResponseDto.<String>failure("Пользователь не найден.").build());
         }
         System.out.println("UserDB password: " + userDB.getPassword());
