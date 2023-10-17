@@ -31,9 +31,7 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
-//                        .requestMatchers("/get_user_info").hasRole("_ADMIN")
                                 .requestMatchers("/login_user").permitAll()
-//                        .requestMatchers("/test_service").permitAll()
                                 .requestMatchers("/save_word", "/delete_word", "/get_dic", "/register_user").permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -43,20 +41,5 @@ public class SecurityConfiguration {
         http.addFilterBefore(jwtTokenFilter, BasicAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence rawPassword) {
-                return (String) rawPassword;
-            }
-
-            @Override
-            public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                return rawPassword.toString().equals(encodedPassword);
-            }
-        };
     }
 }

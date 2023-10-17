@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 public class UserController {
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserRepo userRepo;
@@ -38,16 +36,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register_user", method = RequestMethod.POST)
-    public ResponseEntity<Boolean> registerUser(@RequestBody UserDto userDto) {
-        System.out.println("REGISTER USER: " + userDto);
-        User user = new User();
-        user.setUsername(userDto.username);
-        String password = passwordEncoder.encode(userDto.password);
-        System.out.println("password: " + password);
-        user.setPassword(password);
-        boolean resultSaveUser = userService.saveUser(user);
-        System.out.println("resultSaveUser: " + resultSaveUser);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<ResponseDto<String>> registerUser(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(ResponseDto.<String>success().data(userService.registration(userDto)).build());
     }
 
     @RequestMapping(value = "/login_user", method = RequestMethod.POST)
