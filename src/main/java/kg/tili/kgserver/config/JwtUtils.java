@@ -1,12 +1,13 @@
 package kg.tili.kgserver.config;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
 /**
  * @author Markitanov Vadim
@@ -14,23 +15,28 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class JwtUtils {
-    @Value("${jwt.auth.secret.key}")
-    private String secretKey;
+    private final SecretKeySpec secretKeySpec;
+
+    public JwtUtils(@Value("${jwt.auth.secret.key}") String secretKey) {
+        final byte[] apiKeySecretBytes = Base64.getDecoder().decode(secretKey);
+        secretKeySpec = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+    }
 
     public String validate(String token) {
-        try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
-            DecodedJWT decodedJWT = verifier.verify(token);
-            return decodedJWT.getIssuer();
-        } catch (JWTVerificationException exception) {
-            // Invalid signature/claims
-            System.out.println("ERROR: " + exception);
-        }
-
-        return null;
+        Claims claims = Jwts
+                .parser()
+                .verifyWith(secretKeySpec)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.get("login", String.class);
     }
 
     public String generateToken(String username) {
-        return JWT.create().withIssuer(username).sign(Algorithm.HMAC256(secretKey));
+        return Jwts.builder()
+                .subject(username)
+                .claim("login", username)
+                .signWith(secretKeySpec)
+                .compact();
     }
 }

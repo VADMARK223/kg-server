@@ -1,7 +1,5 @@
 package kg.tili.kgserver.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import kg.tili.kgserver.config.JwtUtils;
 import kg.tili.kgserver.dto.UserDto;
 import kg.tili.kgserver.entity.Role;
