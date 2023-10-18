@@ -1,17 +1,10 @@
 package kg.tili.kgserver.web;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import kg.tili.kgserver.dto.ResponseDto;
 import kg.tili.kgserver.dto.UserDto;
-import kg.tili.kgserver.entity.User;
-import kg.tili.kgserver.repository.UserRepo;
 import kg.tili.kgserver.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final UserRepo userRepo;
 
     @RequestMapping(value = "/get_user_info", method = RequestMethod.GET)
     public ResponseEntity<Boolean> getUserInfo() {
@@ -42,30 +33,13 @@ public class UserController {
 
     @RequestMapping(value = "/login_user", method = RequestMethod.POST)
     public ResponseEntity<ResponseDto<String>> loginUser(@RequestBody UserDto userDto) {
-        System.out.println("LOGIN USER: " + userDto);
-        User userDB = userRepo.findByUsername(userDto.username);
-        if (userDB == null) {
-            return ResponseEntity.ok(ResponseDto.<String>failure("Пользователь не найден.").build());
-        }
-        System.out.println("UserDB password: " + userDB.getPassword());
-//        boolean result = passwordEncoder.matches(userDto.password, userDB.getPassword());
-//        if (!result) {
-//            return ResponseEntity.ok(ResponseDto.<String>failure("Неверный пароль.").build());
-//        }
+        String jwt;
         try {
-            SecurityContextHolder.getContext().setAuthentication(authenticationConfiguration.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword())));
-//            authenticationConfiguration.getAuthenticationManager().authenticate(new );
-//            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userDB.getUsername(), userDB.getPassword());
-//            SecurityContextHolder.getContext().setAuthentication(authRequest);
+            jwt = userService.loginUser(userDto);
         } catch (Exception e) {
             return ResponseEntity.ok(ResponseDto.<String>failure(e.getMessage()).build());
         }
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("user: " + user);
-        Algorithm algorithm = Algorithm.HMAC256("SECRET");
-        String jwt = JWT.create().withIssuer(user.getUsername()).sign(algorithm);
-        System.out.println("jwt: " + jwt);
         return ResponseEntity.ok(ResponseDto.<String>success().data(jwt).build());
     }
 

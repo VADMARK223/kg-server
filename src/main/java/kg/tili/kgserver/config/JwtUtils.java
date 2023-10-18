@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,24 +14,23 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class JwtUtils {
+    @Value("${jwt.auth.secret.key}")
+    private String secretKey;
+
     public String validate(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256("SECRET");
-            JWTVerifier verifier = JWT.require(algorithm)
-                    // specify an specific claim validations
-//                    .withIssuer("admin")
-                    // reusable verifier instance
-                    .build();
-
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
             DecodedJWT decodedJWT = verifier.verify(token);
-            String issuer = decodedJWT.getIssuer();
-
-            return issuer;
+            return decodedJWT.getIssuer();
         } catch (JWTVerificationException exception) {
             // Invalid signature/claims
             System.out.println("ERROR: " + exception);
         }
 
         return null;
+    }
+
+    public String generateToken(String username) {
+        return JWT.create().withIssuer(username).sign(Algorithm.HMAC256(secretKey));
     }
 }
